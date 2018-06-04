@@ -1,4 +1,5 @@
 import sys
+import pickle
 import tensorflow as tf
 import numpy as np
 from net2 import build_net
@@ -29,7 +30,8 @@ def gen_seq(sess, input, input_len, state_input, state_output, pred, maps, picks
 
 @tictoc('generate sequences')
 def generate(src, model, num):
-    _, _, picks, maps = data(src)
+    with open(src, 'rb') as f:
+        _, _, picks, maps = pickle.load(f, encoding='binary')
 
     input, input_len, _, state_input, state_output, _, pred, _ = build_net(len(picks), False)
     init = tf.global_variables_initializer()
