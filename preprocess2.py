@@ -66,7 +66,7 @@ class Batches(object):
         if len(incides) < BATCHSIZE:
             self.perm = np.random.permutation(self.lines.shape[0])
             self.start = BATCHSIZE - len(incides)
-            incides.extend(self.perm[0:self.start])
+            incides = np.append(incides, self.perm[0:start])
         else:
             self.start += BATCHSIZE
         input = self.lines[incides, 0:SEQLEN]
