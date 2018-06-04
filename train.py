@@ -9,16 +9,16 @@ from config import *
 from util import tictoc
 
 @tictoc('save checkpoint')
-def after_epoch(idx, sess, saver, summary, model):
+def after_epoch(idx, sess, saver, summary, model, batches):
     model_path = join(model, str(idx))
     summary_path = join(model, 'summary')
 
     saver.save(sess, model_path)
     with open(summary_path, 'wb') as fout:
-        pickle.dump(summary, fout)
+        pickle.dump((summary, batches.state()), fout)
 
 @tictoc('restore checkpoint')
-def before_train(sess, saver, model):
+def before_train(sess, saver, model, batches):
     os.makedirs(model, exist_ok=True)
     ckpt = tf.train.get_checkpoint_state(model)
     summary = []
@@ -28,11 +28,12 @@ def before_train(sess, saver, model):
         print('restore checkpoint from {}'.format(model))
         saver.restore(sess, model_path)
         with open(summary_path, 'rb') as f:
-            summary = pickle.load(f, encoding='bytes')
+            summary, state = pickle.load(f, encoding='bytes')
+        batches.set_state(state)
     else:
         writer = tf.summary.FileWriter(model, graph=sess.graph)
         writer.close()
-        after_epoch(0, sess, saver, summary, model)
+        after_epoch(0, sess, saver, summary, model, batches)
     return summary
 
 @tictoc('training')
@@ -48,7 +49,7 @@ def train(src, model, iters):
 
     with tf.Session() as sess:
         sess.run(init)
-        summary = before_train(sess, saver, model)
+        summary = before_train(sess, saver, model, batches)
 
         for i in range(len(summary), iters):
             batch_i, batch_s, batch_t = batches.next_batch()
@@ -58,7 +59,7 @@ def train(src, model, iters):
             summary.append(l)
 
             if (i + 1) % ITERATIONS == 0:
-                after_epoch(i + 1, sess, saver, summary, model)
+                after_epoch(i + 1, sess, saver, summary, model, batches)
 
 if __name__ == '__main__':
     train(sys.argv[1], sys.argv[2], int(sys.argv[3]))
