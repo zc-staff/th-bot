@@ -1,9 +1,10 @@
-import tensorflow as tf
-import pickle
+import sys
 import os
+import pickle
+import tensorflow as tf
 from os.path import join
-from net1 import build_net
-from preprocess2 import data, Batches
+from net2 import build_net
+from preprocess2 import Batches
 from config import *
 from util import tictoc
 
@@ -36,10 +37,12 @@ def before_train(sess, saver, model):
 
 @tictoc('training')
 def train(src, model, iters):
-    lines, seq_len, _, _ = data(src)
-    batches = Batches(lines, seq_len)
+    with open(src, 'rb') as f:
+        lines, lines_len, picks, _ = pickle.load(f, encoding='binary')
+    batches = Batches(lines, lines_len)
+    vocab_size = len(picks)
 
-    input, input_len, target, _, _, loss, _, train_opt = build_net(True)
+    input, input_len, target, _, _, loss, _, train_opt = build_net(vocab_size, True)
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
 
@@ -58,5 +61,4 @@ def train(src, model, iters):
                 after_epoch(i + 1, sess, saver, summary, model)
 
 if __name__ == '__main__':
-    import sys
     train(sys.argv[1], sys.argv[2], int(sys.argv[3]))

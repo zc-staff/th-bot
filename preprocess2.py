@@ -1,3 +1,5 @@
+import sys
+import pickle
 import numpy as np
 from itertools import islice, tee
 from config import *
@@ -10,10 +12,8 @@ def preprocess(lines):
     freq = [ (i, pool.count(x)) for i, x in enumerate(chars) ]
     freq.sort(key=lambda x: -x[1])
 
-    picks = [ chars[x[0]] for x in freq[:WORDS] ]
-    picks.append(GOS)
-    picks.append(EOL)
-    picks.append(UNK)
+    picks = [ UNK, GOS, EOL ]
+    picks.extend([ chars[x[0]] for x in freq ])
     maps = { x: i for i, x in enumerate(picks) }
 
     def transChar(x):
@@ -61,12 +61,6 @@ class Batches(object):
         return input, input_len, target
 
 if __name__ == '__main__':
-    import sys
-    l, s, p, m = data(sys.argv[1])
-    print(l.shape)
-    print(s)
-    batches = Batches(l, s)
-    input, input_len, target = batches.next_batch()
-    print(input.shape)
-    print(input_len.shape)
-    print(target.shape)
+    out = data(sys.argv[1])
+    with open(sys.argv[2], 'wb') as f:
+        pickle.dump(out, f)

@@ -12,7 +12,7 @@ def sample_token(maps, p, cutoff):
     if cutoff:
         p[np.argsort(p)[:-TOPN]] = 0
     p /= np.sum(p)
-    return np.random.choice(WORDSALL, p=p)
+    return np.random.choice(WORDS, p=p)
 
 def gen_seq(sess, input, input_len, state_input, state_output, pred, maps, picks):
     state = sess.run(state_input)
