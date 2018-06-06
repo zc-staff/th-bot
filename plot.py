@@ -17,7 +17,7 @@ def smooth(x, wlen):
 def plot(model, out):
     summary_path = join(model, 'summary')
     with open(summary_path, 'rb') as f:
-        summary = pickle.load(f, encoding='bytes')
+        summary, _ = pickle.load(f, encoding='bytes')
     summary = smooth(np.array(summary), 32)
 
     plt.figure(1)
