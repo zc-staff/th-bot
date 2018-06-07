@@ -6,14 +6,28 @@ from tensorflow import layers
 from config import *
 from util import tictoc
 from net1 import build_loss, build_pred, build_opt, test_net
-from net2 import build_embedding, build_preprocess
+from net2 import build_embedding
 from net3 import build_input, build_encoder, build_output
+
+def build_preprocess(input, embedding, training):
+    cell_input = nn.embedding_lookup(embedding, input)
+    # if training:
+    #     cell_input = nn.dropout(cell_input, DROPOUT)
+    return cell_input
 
 def build_cell(training):
     cell = [ nn.rnn_cell.BasicLSTMCell(LSTMSIZE) for _ in range(LSTMNUM) ]
-    if training:
-        cell = [ nn.rnn_cell.DropoutWrapper(c, output_keep_prob=DROPOUT) for c in cell ]
+    # if training:
+    #     cell = [ nn.rnn_cell.DropoutWrapper(c, output_keep_prob=DROPOUT) for c in cell ]
     return nn.rnn_cell.MultiRNNCell(cell)
+
+def build_encoder(input, input_len, embedding, batch_size, training):
+    with tf.variable_scope('encoder_pre'):
+        input = build_preprocess(input, embedding, training)
+    cell = build_cell(training)
+    state_input = cell.zero_state(batch_size, dtype=tf.float32)
+    output, state_output = nn.dynamic_rnn(cell, input, input_len, state_input, scope='encoder')
+    return output, state_input, state_output
 
 def build_decoder(input, input_len, embedding, encoder_state, batch_size, training):
     with tf.variable_scope('decoder_pre'):
