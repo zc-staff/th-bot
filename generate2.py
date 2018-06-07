@@ -33,7 +33,7 @@ def generate(src, model, num):
             linp = len(inp)
             inp.extend([ maps[EOL] ] * (SEQLEN - linp))
 
-            eo = sess.run(encoder_output, feed={
+            eo = sess.run(encoder_output, feed_dict={
                 encoder_input: [inp], encoder_len: [linp]
             })
 
@@ -41,7 +41,7 @@ def generate(src, model, num):
             now = maps[GOS]
             str = ''
             for _ in range(SEQLEN):
-                p, state = sess.run([pred, state_output], feed={
+                p, state = sess.run([pred, state_output], feed_dict={
                     encoder_output: eo, encoder_len: [linp],
                     state_input: state, decoder_input: [[now]]
                 })
