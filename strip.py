@@ -9,7 +9,7 @@ def strip(src, model, out):
     with open(src, 'rb') as f:
         _, _, picks, maps = pickle.load(f, encoding='binary')
 
-    encoder_input, encoder_len, encoder_output, decoder_input, state_input, state_output, pred = build_net(len(picks), False)
+    build_net(len(picks), False)
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
 
