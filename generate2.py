@@ -7,11 +7,6 @@ from util import tictoc
 from generate1 import sample_token
 from net3 import build_net
 
-def transChar(maps, ch):
-    if ch in maps:
-        return maps[ch]
-    return maps[UNK]
-
 @tictoc('generate sequences')
 def generate(src, model, num):
     with open(src, 'rb') as f:
@@ -28,6 +23,12 @@ def generate(src, model, num):
             str = input()
             str = str[:SEQLEN]
             inp = [maps[GOS]]
+
+            def transChar(ch):
+                if ch in maps:
+                    return maps[ch]
+                return maps[UNK]
+
             inp.extend(list(map(transChar, inp)))
             linp = len(inp)
             inp.extend([ maps[EOL] ] * (SEQLEN - linp))
