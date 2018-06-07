@@ -1,5 +1,5 @@
 from config import *
-from preprocess2 import Batches as Batches1
+from data1 import Batches as Batches1
 
 class Batches(Batches1):
     def __init__(self, lines, seq_len):

@@ -4,7 +4,7 @@ import pickle
 import tensorflow as tf
 from os.path import join
 from net2 import build_net
-from preprocess2 import Batches
+from data1 import Batches
 from config import *
 from util import tictoc
 
