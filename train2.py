@@ -2,6 +2,7 @@ import sys
 import os
 import pickle
 import tensorflow as tf
+from time import time
 from config import *
 from util import tictoc
 from net3 import build_net
@@ -24,6 +25,7 @@ def train(src, model, iters):
         summary = before_train(sess, saver, model, batches)
 
         for i in range(len(summary), iters):
+            tic = time()
             ei, el, di, dl, ta = batches.next_batch()
             feed = {
                 encoder_input: ei, encoder_len: el,
@@ -31,7 +33,8 @@ def train(src, model, iters):
                 target: ta
             }
             l, _ = sess.run([ loss, train_opt ], feed_dict=feed)
-            print('iteration {}: {}'.format(i, l))
+            elapsed = time() - tic
+            print('iteration {}: {} in {:.2f}ms'.format(i, l, elapsed * 1000))
             summary.append(l)
 
             if (i + 1) % ITERATIONS == 0:
