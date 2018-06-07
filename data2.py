@@ -10,8 +10,8 @@ class Batches(Batches1):
 
     def next_batch(self):
         incides = self.next_incides()
-        encoder_input = self.lines[incides, 0:SEQLEN]
-        encoder_len = self.seq_len[incides]
+        encoder_input = self.lines[incides, 1:SEQLEN + 1]
+        encoder_len = self.seq_len[incides] - 1
         decoder_input = self.lines[1 + incides, 0:SEQLEN]
         decoder_len = self.seq_len[1 + incides]
         target = self.lines[1 + incides, 1:SEQLEN + 1]
