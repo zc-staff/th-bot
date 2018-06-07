@@ -7,7 +7,13 @@ from config import *
 from util import tictoc
 from net1 import build_loss, build_pred, build_opt, test_net
 from net2 import build_embedding, build_preprocess
-from net3 import build_input, build_cell, build_encoder, build_output
+from net3 import build_input, build_encoder, build_output
+
+def build_cell(training):
+    cell = [ nn.rnn_cell.BasicLSTMCell(LSTMSIZE) for _ in range(LSTMNUM) ]
+    if training:
+        cell = [ nn.rnn_cell.DropoutWrapper(c, output_keep_prob=DROPOUT) for c in cell ]
+    return nn.rnn_cell.MultiRNNCell(cell)
 
 def build_decoder(input, input_len, embedding, encoder_state, batch_size, training):
     with tf.variable_scope('decoder_pre'):
