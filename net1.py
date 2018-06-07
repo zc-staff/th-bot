@@ -31,8 +31,7 @@ def build_loss(output, input_len, cell_target, seq_size):
     loss = nn.softmax_cross_entropy_with_logits_v2(logits=output, labels=cell_target)
     loss = tf.reshape(loss, [ -1, seq_size ])
 
-    mask = tf.expand_dims(tf.range(seq_size), 0) < tf.expand_dims(input_len, -1)
-    mask = tf.cast(mask, tf.float32)
+    mask = tf.sequence_mask(input_len, seq_size, dtype=tf.float32)
     loss = mask * loss
     loss = tf.reduce_sum(loss, -1)
     loss = tf.reduce_mean(loss)
