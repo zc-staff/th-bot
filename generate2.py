@@ -31,7 +31,6 @@ def generate(src, model, num):
             inp.extend(list(map(transChar, inp)))
             linp = len(inp)
             inp.extend([ maps[EOL] ] * (SEQLEN - linp))
-            linp += 1
 
             eo = sess.run(encoder_output, feed={
                 encoder_input: [inp], encoder_len: [linp]
