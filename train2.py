@@ -5,7 +5,7 @@ import tensorflow as tf
 from time import time
 from config import *
 from util import tictoc
-from net3 import build_net
+from net4 import build_net
 from train1 import after_epoch, before_train
 from data2 import Batches
 
