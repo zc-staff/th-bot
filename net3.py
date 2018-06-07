@@ -71,7 +71,7 @@ def build_net(vocab_size, training):
     else:
         with tf.variable_scope('pred'):
             pred = build_pred(decoder_output, vocab_size, decoder_seq)
-        return encoder_input, encoder_len, decoder_input, state_input, state_output, pred
+        return encoder_input, encoder_len, encoder_output, decoder_input, state_input, state_output, pred
 
 if __name__ == '__main__':
     with open(sys.argv[1], 'rb') as f:
