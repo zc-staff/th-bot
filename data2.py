@@ -1,3 +1,4 @@
+import numpy as np
 from config import *
 from data1 import Batches as Batches1
 
