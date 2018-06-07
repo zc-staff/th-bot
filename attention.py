@@ -19,10 +19,11 @@ class AttentionCell(nn.rnn_cell.RNNCell):
 
         self._encoder_len = encoder_len
         self._encoder_output = encoder_output
-        with tf.variable_scope(None, 'attention'):
+        with tf.variable_scope(None, 'attn_weight'):
             encoder_weight = tf.get_variable('Ua', shape=(attn_size, encoder_size))
             self._state_weight = tf.get_variable('Wa', shape=(attn_size, self._cell_size))
             self._act_weight = tf.get_variable('va', shape=attn_size)
+        with tf.variable_scope('attention'):
             self._encoder_attn = tf.tensordot(encoder_output, encoder_weight, [[-1], [1]])
 
     @property

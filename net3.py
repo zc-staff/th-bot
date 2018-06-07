@@ -9,12 +9,16 @@ from attention import AttentionCell
 from net1 import build_loss, build_pred, build_opt, test_net
 from net2 import build_embedding, build_preprocess
 
-def build_input(batch_size, encoder_seq, decoder_seq):
+def build_input(batch_size, encoder_seq, decoder_seq, training):
     encoder_input = tf.placeholder(tf.int32, shape=(batch_size, encoder_seq), name='encoder_input')
     encoder_len = tf.placeholder(tf.int32, shape=(batch_size), name='encoder_len')
     decoder_input = tf.placeholder(tf.int32, shape=(batch_size, decoder_seq), name='decoder_input')
-    decoder_len = tf.placeholder(tf.int32, shape=(batch_size), name='decoder_len')
-    target = tf.placeholder(tf.int32, shape=(batch_size, decoder_seq), name='target')
+    if training:
+        decoder_len = tf.placeholder(tf.int32, shape=(batch_size), name='decoder_len')
+        target = tf.placeholder(tf.int32, shape=(batch_size, decoder_seq), name='target')
+    else:
+        decoder_len = tf.constant(1, dtype=tf.int32, shape=(batch_size,), name='decoder_len')
+        target = None
     return encoder_input, encoder_len, decoder_input, decoder_len, target
 
 def build_cell(training):
@@ -50,7 +54,7 @@ def build_net(vocab_size, training):
     batch_size = BATCHSIZE if training else 1
     encoder_seq = SEQLEN
     decoder_seq = SEQLEN if training else 1
-    encoder_input, encoder_len, decoder_input, decoder_len, target = build_input(batch_size, encoder_seq, decoder_seq)
+    encoder_input, encoder_len, decoder_input, decoder_len, target = build_input(batch_size, encoder_seq, decoder_seq, training)
     embedding = build_embedding(vocab_size)
     encoder_output, _, _ = build_encoder(encoder_input, encoder_len, embedding, batch_size, training)
     decoder_output, state_input, state_output = build_decoder(decoder_input, decoder_len, embedding, encoder_output, encoder_len, batch_size, training)
@@ -65,11 +69,12 @@ def build_net(vocab_size, training):
             train_opt = build_opt(loss)
         return encoder_input, encoder_len, decoder_input, decoder_len, target, loss, train_opt
     else:
-        pred = build_pred(decoder_output, vocab_size, decoder_seq)
-        return encoder_input, encoder_len, decoder_input, decoder_len, state_input, state_output, pred
+        with tf.variable_scope('pred'):
+            pred = build_pred(decoder_output, vocab_size, decoder_seq)
+        return encoder_input, encoder_len, decoder_input, state_input, state_output, pred
 
 if __name__ == '__main__':
     with open(sys.argv[1], 'rb') as f:
         _, _, picks, _ = pickle.load(f, encoding='binary')
-    build_net(len(picks), True)
+    build_net(len(picks), False)
     test_net(sys.argv[2])
