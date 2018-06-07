@@ -29,7 +29,7 @@ def generate(src, model, num):
                     return maps[ch]
                 return maps[UNK]
 
-            inp.extend(list(map(transChar, inp)))
+            inp.extend(list(map(transChar, str)))
             linp = len(inp)
             inp.extend([ maps[EOL] ] * (SEQLEN - linp))
 
