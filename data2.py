@@ -5,6 +5,7 @@ class Batches(Batches1):
     def __init__(self, lines, seq_len):
         super().__init__(lines, seq_len)
         self.size -= 1
+        self.perm = np.random.permutation(self.size)
 
     def next_batch(self):
         incides = self.next_incides()
