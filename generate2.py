@@ -46,6 +46,8 @@ def generate(src, model, num):
                     state_input: state, decoder_input: [[now]]
                 })
                 now = sample_token(maps, p, True)
+                if now == maps[EOL]:
+                    break
                 str += picks[now]
             print(str)
 
