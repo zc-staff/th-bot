@@ -11,14 +11,14 @@ from net3 import build_input, build_encoder, build_output
 
 def build_preprocess(input, embedding, training):
     cell_input = nn.embedding_lookup(embedding, input)
-    # if training:
-    #     cell_input = nn.dropout(cell_input, DROPOUT)
+    if training:
+        cell_input = nn.dropout(cell_input, DROPOUT)
     return cell_input
 
 def build_cell(training):
     cell = [ nn.rnn_cell.BasicLSTMCell(LSTMSIZE) for _ in range(LSTMNUM) ]
-    # if training:
-    #     cell = [ nn.rnn_cell.DropoutWrapper(c, output_keep_prob=DROPOUT) for c in cell ]
+    if training:
+        cell = [ nn.rnn_cell.DropoutWrapper(c, output_keep_prob=DROPOUT) for c in cell ]
     return nn.rnn_cell.MultiRNNCell(cell)
 
 def build_encoder(input, input_len, embedding, batch_size, training):
