@@ -55,8 +55,8 @@ def generate(src, model, num):
             inp = list(map(transChar, str))
             linp = len(inp)
             inp.extend([ maps[EOL] ] * (SEQLEN - linp))
-            print(inp)
-            print(linp)
+            # print(inp)
+            # print(linp)
 
             state = sess.run(encoder_state, feed_dict={
                 encoder_input: [inp], encoder_len: [linp]
