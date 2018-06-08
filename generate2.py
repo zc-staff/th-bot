@@ -43,8 +43,8 @@ def generate(src, model, num):
     with tf.Session() as sess:
         sess.run(init)
         saver.restore(sess, model)
+        str = input()
         for _ in range(num):
-            str = input('Q: ')
             str = str[:SEQLEN]
 
             def transChar(ch):
@@ -72,7 +72,7 @@ def generate(src, model, num):
                 if now == maps[EOL]:
                     break
                 str += picks[now]
-            print('A: ' + str)
+            print(str)
 
 if __name__ == '__main__':
     generate(sys.argv[1], sys.argv[2], int(sys.argv[3]))
