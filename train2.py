@@ -1,3 +1,7 @@
+# training for net3 & net4
+# change the import line to choose a model
+# args: <data file> <model directory> <max iterations>
+
 import sys
 import os
 import pickle

@@ -1,3 +1,5 @@
+# remove useless parameters in a trained model
+
 import sys
 import pickle
 import tensorflow as tf

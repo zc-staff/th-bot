@@ -1,3 +1,7 @@
+# generating using trained model for net1 & net2
+# change to import line to choose a model
+# args: <data file> <model file> <lines to generate>
+
 import sys
 import pickle
 import tensorflow as tf

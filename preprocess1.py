@@ -1,3 +1,7 @@
+# preprocess raw qq txt to lines
+# filter special messages
+# args: <raw txt> <output file> 
+
 import sys
 import re
 

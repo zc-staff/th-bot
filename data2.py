@@ -1,3 +1,5 @@
+# batching data used in net3 & net4
+
 import numpy as np
 from config import *
 from data1 import Batches as Batches1

@@ -1,3 +1,5 @@
+# global configs
+
 GOS = '<GOS>'
 EOL = '<EOL>'
 UNK = '<UNK>'

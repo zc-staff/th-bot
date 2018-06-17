@@ -1,3 +1,6 @@
+# filter duplicate answers to a question
+# argv[3] is an integer representing how many lines to scan to detect duplicate
+
 import pickle
 import sys
 import numpy as np

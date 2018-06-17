@@ -1,3 +1,6 @@
+# plot loss in a figure
+# args: <model directory> <output file>
+
 import numpy as np
 import pickle
 import matplotlib

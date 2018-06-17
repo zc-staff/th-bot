@@ -1,3 +1,5 @@
+# batching data used in net1 & net2
+
 import numpy as np
 from config import *
 

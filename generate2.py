@@ -1,3 +1,8 @@
+# generating using trained model for net1 & net2
+# change to import line to choose a model
+# args: <data file> <model file> <lines to generate>
+# then input a question to get an answer
+
 import sys
 import pickle
 import tensorflow as tf
@@ -12,29 +17,6 @@ from data2 import Batches
 def generate(src, model, num):
     with open(src, 'rb') as f:
         lines, lines_len, picks, maps = pickle.load(f, encoding='binary')
-
-    # batches = Batches(lines, lines_len)
-    # ei, el, di, dl, ta = batches.next_batch()
-    # str = ''
-    # for x in ei[0]:
-    #     if x == maps[EOL]:
-    #         break
-    #     str += picks[x]
-    # print(str)
-
-    # encoder_input, encoder_len, decoder_input, decoder_len, target, loss, train_opt = build_net(len(picks), True)
-    # init = tf.global_variables_initializer()
-    # saver = tf.train.Saver()
-    #
-    # with tf.Session() as sess:
-    #     sess.run(init)
-    #     saver.restore(sess, model)
-    #     l = sess.run(loss, feed_dict={
-    #         encoder_input: ei, encoder_len: el,
-    #         decoder_input: di, decoder_len: dl,
-    #         target: ta
-    #     })
-    #     print(l)
 
     encoder_input, encoder_len, encoder_state, decoder_input, state_input, state_output, pred = build_net(len(picks), False)
     init = tf.global_variables_initializer()
@@ -55,8 +37,6 @@ def generate(src, model, num):
             inp = list(map(transChar, str))
             linp = len(inp)
             inp.extend([ maps[EOL] ] * (SEQLEN - linp))
-            # print(inp)
-            # print(linp)
 
             state = sess.run(encoder_state, feed_dict={
                 encoder_input: [inp], encoder_len: [linp]

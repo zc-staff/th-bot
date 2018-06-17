@@ -1,3 +1,11 @@
+# preprocess lines to data file
+# data file stores a tuple (lines, seq_len, words, map)
+# lines is a matrix of LINES x SEQLEN, zero padding, presenting words
+# seq_len is a vector of length of each line
+# words are list of words (character)
+# map is a reverse map of words to index
+# args: <txt> <output data file>
+
 import sys
 import pickle
 import numpy as np

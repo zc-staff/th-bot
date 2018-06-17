@@ -1,3 +1,5 @@
+# attention RNN cell used in net3
+
 import sys
 import tensorflow as tf
 from tensorflow import nn
